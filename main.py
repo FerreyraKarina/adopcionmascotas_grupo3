@@ -2,11 +2,15 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  
+load_dotenv()
 
-uri = os.getenv("MONGODB_URI")
-cliente = MongoClient(uri)
+cliente = MongoClient(os.getenv("MONGODB_URI"))
 db = cliente["adopcionesMascotas"]
+
+# Limpia las colecciones antes de insertar
+db.usuarios.drop()
+db.mascotas.drop()
+db.adopciones.drop()
 
 usuarios  = db["usuarios"]
 mascotas  = db["mascotas"]
@@ -22,4 +26,10 @@ mascotas.insert_many([
     {"nombre": "Michi", "tipo": "gato",  "edad": 1}
 ])
 
-print("datos cargados")
+print("=== USUARIOS ===")
+for u in usuarios.find():
+    print(u)
+
+print("=== MASCOTAS ===")
+for m in mascotas.find():
+    print(m)
